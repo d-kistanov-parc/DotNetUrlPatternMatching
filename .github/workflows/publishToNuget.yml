@@ -1,0 +1,24 @@
+name: publish to nuget
+on:
+  push:
+    branches:
+      - master
+jobs:
+  publish:
+    name: build, pack & publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: publish on version change
+        id: publish_nuget
+        uses: rohith/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: src/UrlPatternMatching.csproj          
+          PACKAGE_NAME: UrlPatternMatching
+          VERSION_FILE_PATH: src/UrlPatternMatching.csproj
+          VERSION_REGEX: ^\s*<Version>(.*)<\/Version>\s*$                 
+          TAG_COMMIT: true
+          TAG_FORMAT: v*
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}          
+          NUGET_SOURCE: https://api.nuget.org
+          INCLUDE_SYMBOLS: true
