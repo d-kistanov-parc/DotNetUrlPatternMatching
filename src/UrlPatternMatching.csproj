@@ -5,6 +5,7 @@
     <LangVersion>8.0</LangVersion>
     <Authors>Dmitriy Kistanov</Authors>
 	<EmbedUntrackedSources>true</EmbedUntrackedSources>
+	<Version>1.0.0.1</Version>
   </PropertyGroup>
 
 </Project>
