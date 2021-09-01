@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\UrlPatternMatching.csproj" />
+    <ProjectReference Include="..\src\UrlPatternMatching.csproj" />
   </ItemGroup>
 
 </Project>
