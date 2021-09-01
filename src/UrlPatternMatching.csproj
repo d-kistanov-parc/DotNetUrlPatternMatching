@@ -4,12 +4,13 @@
     <TargetFrameworks>netstandard1.0;netstandard1.1;netstandard1.2;netstandard1.3;netstandard1.4;netstandard1.5;netstandard1.6;netstandard2.0;netstandard2.1</TargetFrameworks>
     <LangVersion>8.0</LangVersion>
     <Authors>Dmitriy Kistanov</Authors>
-	<EmbedUntrackedSources>true</EmbedUntrackedSources>
-	<Version>1.1.2.1</Version>
-	<PackageProjectUrl>https://github.com/d-kistanov-parc/DotNetUrlPatternMatching</PackageProjectUrl>
-	<RepositoryUrl>https://github.com/d-kistanov-parc/DotNetUrlPatternMatching</RepositoryUrl>
-	<PackageTags>url pattern matching comapre pattern-matching url-pattern-matching</PackageTags>
-	<Description>The library allows you to match a URL to a pattern.
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<Version>1.1.2.1</Version>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/d-kistanov-parc/DotNetUrlPatternMatching</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/d-kistanov-parc/DotNetUrlPatternMatching</RepositoryUrl>
+		<PackageTags>url pattern matching comapre pattern-matching url-pattern-matching</PackageTags>
+		<Description>The library allows you to match a URL to a pattern.
 How it works - we break the url pattern into parts And we match each non-empty part with a similar one from the URL.
 
 You can specify Wildcard: * or ~
@@ -17,11 +18,10 @@ Where * is any character set within the group (schema, host, port, path, paramet
 Where ~ any character set within a group segment (host, path)
 
 Only supply parts of the URL you care about. Parts left out will match anything. E.g. if you don’t care about the host, then leave it out.</Description>
-	<Copyright>Copyright (c) 2021, Dmitriy Kistanov</Copyright>
-	<PackageReleaseNotes>add MD file
+		<Copyright>Copyright (c) 2021, Dmitriy Kistanov</Copyright>
+		<PackageReleaseNotes>add MD file
 add new Extensions Methods - IsMatch
 optimize code
 add props for nuget</PackageReleaseNotes>
   </PropertyGroup>
-
 </Project>
