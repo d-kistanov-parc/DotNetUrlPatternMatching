@@ -2,7 +2,7 @@
 
 The library allows you to match a URL to a pattern.
 
-How it works - we break the url pattern into parts
+How it works - we break the url pattern into parts  
 And we match each non-empty part with a similar one from the URL.
 
 You can specify Wildcard: `*` or `~`  
@@ -23,9 +23,11 @@ Only supply parts of the URL you care about. Parts left out will match anything.
     - [Query](#query)
     - [Fragment](#fragments)
     - [Basic Authentication](#basic-authentication)
-- [All Features](#all-features)
+- [Behavior](#behavior)
+	- [Сombining](#сombining)
 	- [Escaping](#escaping)
 	- [Config](#config)
+	- [Exceptions](#exceptions)
 
 ## Quick Start
 nuget: https://www.nuget.org/packages/UrlPatternMatching/
@@ -101,10 +103,28 @@ Pattern | Matched | Not matched
 ```*:6564``` | `http://github.com:6564` | `http://github.com`
 
 ## Path
-Text Path
+`~` any character in path  
+`*` any character in segment of path
+
+Pattern | Matched | Not matched
+--- |--- | ---
+```/api/user/get``` | `https://github.com/api/user/get?w=1` | `https://github.com/api/user/get/45/`
+```/api/us~``` | `https://github.com/api/users` | `https://github.com/api/user/get`
+```/api/us*``` | `https://github.com/api/user/get` | `https://github.com/svc/api/user`
+```/api/user/~/get``` | `https://github.com/api/user/8787/get` | `https://github.com/api/user`
+```github.com/*api/users``` | `https://github.com/v3/api/users` | `https://github.com/v3/api/users/get`
 
 ## Query
-Text Query
+
+To match parameters in the template, the parameter (or part of it), the `=` sign, as well as the value (or part of it) must be specified
+
+For case sensitive comparison, you can set the parameters: `IsCaseSensitiveParamNames` or `IsCaseSensitiveParamValues` in config
+
+Pattern | Matched | Not matched
+--- |--- | ---
+```?cc=33&aa=1*``` | `http://github.com?aa=11&bb=22&cc=33` | `http://github.com`
+```?cc=33&a*=11``` | `http://github.com?abs=11&bb=22&cc=33` | `http://github.com?cc=33&bba=11`
+```http://github.com??text=%D0*``` | `http://github.com??text=%D0%BC%D0%BE%D0%BB` | `http://github.com??text=%BC%D0`
 
 ## Fragments
 Pattern | Matched | Not matched
@@ -112,18 +132,41 @@ Pattern | Matched | Not matched
 ```http://github.com#main*``` | `http://github.com#maintable` | `https://github.com#table`
 ```http://github.com#main*page*load``` | `http://github.com#mainAnyPageWillLoad` | `http://github.com#baseMainAnyPageWillLoad`
 ```http://github.com#*load``` | `http://github.com#mainPageLoad` | `http://github.com#mainPageLoadThen`
+```#main``` | `http://github.com#main` | `https://main.com`
 
 ## Basic Authentication
-Text Basic Authentication
+We can check basic authentication in url (support not all browsers)
 
-## All Features
-Text All Features
+Pattern | Matched | Not matched
+--- |--- | ---
+```https://myUser:MyPassword@github.com``` | `https://myUser:MyPassword@github.com` | `https://github.com`
+```https://myUser:@github.com``` | `https://myUser:MyPassword@github.com` | `https://other:any@github.com`
+```https://mail*:@github.com``` | `https://mail1:pass@github.com` | `https://other:mail@github.com`
+
+## Behavior
+Schema and host are always case insensitive. 
+
+## Сombining
+You can combine different parts in the template and specify several wildcards
+
+Example: `*nuget*/~/~/?top=*` should be matched with `https://www.nuget.org/packages/UrlPatternMatching?top=100`
+
+Also you can skip any parts and specify, for example, in the pattern only the scheme and the fragment
+
+Example: `https://#page`
 
 ## Escaping
-Text Escaping
+Matching can be given escaped characters (`UrlDecode` \ `UrlEncode`)
+
+Pattern | will matched
+--- |---
+```#молоко``` | `https://github.com#%D0%BC%D0%BE%D0%BB%D0%BE%D0%BA%D0%BE`
+```github.com#молоко``` | `https://github.com#молоко`
+```#%D0%BC%D0%BE%D0%BB%D0%BE%D0%BA%D0%BE``` | `https://github.com#молоко`
+```#%D0*``` | `https://github.com#D0%BC%D0%BE%D0%BB%D0%BE%D0%BA%D0%BE`
 
 ## Config
-For gloabal settings use Config.Default, or create a new Config.
+For gloabal settings use `Config.Default`, or create a `new Config()`.
 
 Config contains case sensitivity settings for most parts. For others will be ignore case sensitive.
 ```cs
@@ -138,20 +181,24 @@ Example:
 ```cs
 var config = new Config { IsCaseSensitivePathMatch = true };
 var matcher = new UrlPatternMatcher("/atlassian.net/jira/your-work/", config);
-var result = matcher.IsMatch("https://any.atlassian.net/jira/Your-Work");
+bool result = matcher.IsMatch("https://any.atlassian.net/jira/Your-Work");
 ```
-The "global config" will be applied by default, it does not need to be explicitly changed in the parameters
+If the config is not specified, then the default config will be applied, it does not need to be explicitly changed in the parameters.
 
 Example:
 
 ```cs
 Config.Default.IsCaseSensitiveParamValues = true; 
 ```
-The "global config" can be passed as parameters for UrlExtensions.IsMatch
+Default config can be passed as parameters for `UrlExtensions.IsMatch  `
 
 Example:
 
 ```cs
 var config = new Config();
-var result = "https://github.com".IsMatch("*.com", config);
+bool isMatch = "https://github.com".IsMatch("*.com", config);
 ```
+
+## Exceptions
+
+The library may throw exceptions of type `InvalidPatternException` or `UriFormatException`
