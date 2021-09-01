@@ -30,14 +30,19 @@ Only supply parts of the URL you care about. Parts left out will match anything.
 	- [Exceptions](#exceptions)
 
 ## Quick Start
-nuget: https://www.nuget.org/packages/UrlPatternMatching/
+[![NuGet](https://img.shields.io/nuget/v/UrlPatternMatching.svg)](https://www.nuget.org/packages/UrlPatternMatching/)
 
 * support all .NETStandard versions
 * without dependencies
 
 ## Installation
-* .NET CLI > dotnet add package UrlPatternMatching
-* NPM > Install-Package UrlPatternMatching
+```
+PM> Install-Package UrlPatternMatching
+```
+
+```
+.NET CLI> dotnet add package UrlPatternMatching
+```
 
 ## Simple Examples
 ```cs
@@ -170,11 +175,14 @@ For gloabal settings use `Config.Default`, or create a `new Config()`.
 
 Config contains case sensitivity settings for most parts. For others will be ignore case sensitive.
 ```cs
-	bool IsCaseSensitivePathMatch { get; set; } = false;
-	bool IsCaseSensitiveFragmentMatch { get; set; } = false;
-	bool IsCaseSensitiveParamNames { get; set; } = false;
-	bool IsCaseSensitiveParamValues { get; set; } = false;
-	bool IsCaseSensitiveUserAndPassword { get; set; } = true;
+public class Config
+{
+	public bool IsCaseSensitivePathMatch { get; set; } = false;
+	public bool IsCaseSensitiveFragmentMatch { get; set; } = false;
+	public bool IsCaseSensitiveParamNames { get; set; } = false;
+	public bool IsCaseSensitiveParamValues { get; set; } = false;
+	public bool IsCaseSensitiveUserAndPassword { get; set; } = true;
+}
 ```
 Example:
 
