@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Text.RegularExpressions;
 using UrlPatternMatching.Core.Exceptions;
 
 namespace UrlPatternMatching.Core
 {
-	internal class UrlPatternQueryMatcher : IUrlPatternMatcher
+    internal class UrlPatternQueryMatcher : IUrlPatternMatcher
 	{
 		public UrlPartType UrlPartType => UrlPartType.QueryParams;
 
@@ -30,7 +29,7 @@ namespace UrlPatternMatching.Core
 				return true;
 			}
 
-			var query = (url.Query ?? string.Empty).Trim('?');
+			var query = (url.Query ?? string.Empty).TrimStart('?');
 
 			List<Parm> urlParams = GetRequiredParams(query);
 

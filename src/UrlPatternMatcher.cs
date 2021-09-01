@@ -35,5 +35,10 @@ namespace UrlPatternMatching
 		{
 			return _matchers.All(m => m.IsMatch(uri));
 		}
+
+		public bool IsMatch(string url)
+		{
+			return IsMatch(new Uri(url));
+		}
 	}
 }

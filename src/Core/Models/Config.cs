@@ -6,7 +6,7 @@ namespace UrlPatternMatching
 	{
 		public bool IsCaseSensitivePathMatch { get; set; }
 		public bool IsCaseSensitiveFragmentMatch { get; set; }
-		public bool IsCaseSensitiveParamNames { get; set; } = true;
+		public bool IsCaseSensitiveParamNames { get; set; }
 		public bool IsCaseSensitiveParamValues { get; set; }
 		public bool IsCaseSensitiveUserAndPassword { get; set; } = true;
 

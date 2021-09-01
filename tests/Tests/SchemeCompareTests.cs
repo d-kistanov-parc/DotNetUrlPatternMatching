@@ -1,9 +1,8 @@
 using NUnit.Framework;
-using UrlPatternMatching;
 
 namespace Tests
 {
-	class SchemeCompareTests : BaseTests
+    class SchemeCompareTests : BaseTests
 	{
 		private const string URL = "https://a.b";
 
