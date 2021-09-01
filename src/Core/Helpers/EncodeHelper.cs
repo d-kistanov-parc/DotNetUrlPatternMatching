@@ -6,7 +6,7 @@ using System.Web;
 
 namespace UrlPatternMatching.Core
 {
-	internal class EncodeHelper
+    internal class EncodeHelper
 	{
 		public static string Decode(string value)
 		{
@@ -17,41 +17,23 @@ namespace UrlPatternMatching.Core
 #endif
 		}
 
-		internal static string Encode(string value, params string[] stopChars)
+		internal static string Encode(string value)
 		{
-			
-
-			string result;
 #if NETSTANDARD2_0 || NETSTANDARD2_0
-			result = HttpUtility.UrlEncode(value);
+			return HttpUtility.UrlEncode(value);
 #else
-			result =  WebUtility.UrlEncode(value);
+			return WebUtility.UrlEncode(value);
 #endif
-
-			if (stopChars != null)
-			{
-				foreach (var replace in stopChars)
-				{
-#if NETSTANDARD2_0 || NETSTANDARD2_0
-					var repValue = HttpUtility.UrlEncode(replace);
-#else
-				var repValue = WebUtility.UrlEncode(replace);
-#endif
-					result = result.Replace(repValue, replace);
-				}
-			}
-
-			return result;
 		}
 
 		internal static HashSet<string> GetSearchValues(string value)
 		{
 			return new HashSet<string>
-				{
-					value,
-					Decode(value),
-					Encode(value)
-				};
+			{
+				value,
+				Decode(value),
+				Encode(value)
+			};
 		}
 	}
 }

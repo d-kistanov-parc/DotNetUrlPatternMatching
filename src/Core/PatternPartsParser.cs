@@ -1,11 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UrlPatternMatching.Core.Exceptions;
 
 namespace UrlPatternMatching.Core
 {
-	internal class PatternPartsParser : IPatternPartsParser
+    internal class PatternPartsParser : IPatternPartsParser
 	{
 		private readonly static Regex UrlPartsRegex = new Regex(
 			@"^((?<Scheme>.*)\:\/\/)?" +
@@ -37,7 +36,7 @@ namespace UrlPatternMatching.Core
 				SetGroupIfExists(UrlPartType.RequiredAuthorization);
 				SetGroupIfExists(UrlPartType.UserName);
 				SetGroupIfExists(UrlPartType.UserPassword);
-				SetHost(urlPatternMatch, partsMap);
+				SetHostAndPort(urlPatternMatch, partsMap);
 				SetGroupIfExists(UrlPartType.Path);
 				SetGroupIfExists(UrlPartType.QueryParams);
 				SetGroupIfExists(UrlPartType.Fragment);
@@ -69,7 +68,7 @@ namespace UrlPatternMatching.Core
 			}
 		}
 
-		private void SetHost(Match match, Dictionary<UrlPartType, string> partsMap)
+		private void SetHostAndPort(Match match, Dictionary<UrlPartType, string> partsMap)
 		{
 			var groupValue = GetGroupValue(match, "HostIpPort");
 

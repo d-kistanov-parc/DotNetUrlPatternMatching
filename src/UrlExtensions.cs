@@ -2,7 +2,7 @@ using System;
 
 namespace UrlPatternMatching
 {
-	public static class UriExtensions
+	public static class UrlExtensions
 	{
 		public static bool IsMatch(this Uri url, string pattern)
 		{

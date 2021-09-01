@@ -6,6 +6,24 @@
     <Authors>Dmitriy Kistanov</Authors>
 	<EmbedUntrackedSources>true</EmbedUntrackedSources>
 	<Version>1.0.0.1</Version>
+	<PackageProjectUrl>https://github.com/d-kistanov-parc/DotNetUrlPatternMatching</PackageProjectUrl>
+	<RepositoryUrl>https://github.com/d-kistanov-parc/DotNetUrlPatternMatching</RepositoryUrl>
+	<PackageTags>url pattern matching comapre pattern-matching url-pattern-matching</PackageTags>
+	<AssemblyVersion>1.1.2.1</AssemblyVersion>
+	<FileVersion>1.1.2.1</FileVersion>
+	<Description>The library allows you to match a URL to a pattern.
+How it works - we break the url pattern into parts And we match each non-empty part with a similar one from the URL.
+
+You can specify Wildcard: * or ~
+Where * is any character set within the group (schema, host, port, path, parameter, anchor)
+Where ~ any character set within a group segment (host, path)
+
+Only supply parts of the URL you care about. Parts left out will match anything. E.g. if you don’t care about the host, then leave it out.</Description>
+	<Copyright>Copyright (c) 2021, Dmitriy Kistanov</Copyright>
+	<PackageReleaseNotes>add MD file
+add new Extensions Methods - IsMatch
+optimize code
+add props for nuget</PackageReleaseNotes>
   </PropertyGroup>
 
 </Project>
