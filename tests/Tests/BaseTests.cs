@@ -7,29 +7,29 @@ namespace Tests
 {
 	abstract class BaseTests
 	{
-		protected void ShouldBeMatch(string pattern, string url)
+		protected static void ShouldBeMatch(string pattern, string url)
 		{
 			Assert.IsTrue(url.IsMatch(pattern));
 		}
 
-		protected void ShouldBeNotMatch(string pattern, string url)
+		protected static void ShouldBeNotMatch(string pattern, string url)
 		{
 			Assert.IsFalse(url.IsMatch(pattern));
 		}
 
-		protected void ShouldBeExpectedMatch(string pattern, string url, Config config, bool result)
+		protected static void ShouldBeExpectedMatch(string pattern, string url, Config config, bool result)
 		{
 			Assert.AreEqual(result, url.IsMatch(pattern, config));
 		}
 
-		protected void ShouldBeThrowException(string pattern, string error)
+		protected static void ShouldBeThrowException(string pattern, string error)
 		{
 			var exception = Assert.Throws<InvalidPatternException>(() => new UrlPatternMatcher(pattern));
 
 			Assert.AreEqual(error, exception.Message);
 		}
 
-		protected void ShouldBeComapreCaseSensetive(string url,
+		protected static void ShouldBeComapreCaseSensetive(string url,
 			string pattern,
 			Config config, 
 			Action<Config> changeFunc)
@@ -56,7 +56,7 @@ namespace Tests
 			ShouldBeExpectedMatch(patternLower, urlUpper, config, true);
 		}
 
-		protected void ShouldBeComapreCaseSensetive(string url,
+		protected static void ShouldBeComapreCaseSensetive(string url,
 			string pattern,
 			Action<Config> changeFunc)
 		{
