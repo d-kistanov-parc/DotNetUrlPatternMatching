@@ -2,9 +2,16 @@ using System;
 
 namespace UrlPatternMatching.Core.Exceptions
 {
+	/// <summary>
+	/// throw if pattern is invalid.
+	/// </summary>
 	public class InvalidPatternException : Exception
 	{
-		public InvalidPatternException(string name) : base(name)
+		/// <summary>
+		/// Ctor.
+		/// </summary>
+		/// <param name="error"></param>
+		public InvalidPatternException(string error) : base(error)
 		{
 		}
 	}
