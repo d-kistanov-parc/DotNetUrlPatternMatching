@@ -1,93 +1,113 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using UrlPatternMatching.Core.Exceptions;
 
 namespace UrlPatternMatching.Core
 {
-    internal class PatternPartsParser
-    {
-        private readonly static Regex UrlPartsRegex = new Regex(
-            @"^((?<Scheme>.*)\:\/\/)?" +
-            @"(?<RequiredAuthorization>(?<User>[^:]*)(:(?<Password>.*))@)?" +
-            @"(?<HostIpPort>[^\/?#]+)?" +
-            @"(?<Path>\/[^\?#]+)?" +
-            @"(\?(?<QueryParams>[^#]+))?" +
-            @"(\#(?<Fragment>.+))?$", RegexOptions.Compiled);
+    internal class PatternPartsParser : IPatternPartsParser
+	{
+		private readonly static Regex UrlPartsRegex = new Regex(
+			@"^((?<Scheme>.*)\:\/\/)?" +
+			@"(?<RequiredAuthorization>(?<UserName>[^:]*)(:(?<UserPassword>.*))@)?" +
+			@"(?<HostIpPort>[^\/?#]*)?" +
+			@"(?<Path>\/[^\?#]*)?" +
+			@"(\?(?<QueryParams>[^#]*))?" +
+			@"(\#(?<Fragment>.*))?$"
+#if !NETSTANDARD1_0 && !NETSTANDARD1_1 && !NETSTANDARD1_2
+, RegexOptions.Compiled
+#endif
+			);
 
-        private readonly static Regex IpV6PortRegex = new Regex(@"^(?<Host>\[.+\])?(\:(?<Port>\d+))$", RegexOptions.Compiled);
+		private readonly static Regex IpV6PortRegex = new Regex(@"^(?<Host>\[.+\])?(\:(?<Port>\d+)?)?$"
+#if !NETSTANDARD1_0 && !NETSTANDARD1_1 && !NETSTANDARD1_2
+, RegexOptions.Compiled
+#endif
+);
 
-        internal Dictionary<UrlPartType, string> Parse(string pattern)
-        {
-            var partsMap = new Dictionary<UrlPartType, string>();
+		public Dictionary<UrlPartType, string> Parse(string pattern)
+		{
+			var partsMap = new Dictionary<UrlPartType, string>();
 
-            var urlPatternMatch = UrlPartsRegex.Match(pattern);
+			var urlPatternMatch = UrlPartsRegex.Match(pattern);
 
-            if (urlPatternMatch.Success)
-            {
-                SetGroupIfExists(urlPatternMatch, UrlPartType.Scheme);
-                SetGroupIfExists(urlPatternMatch, UrlPartType.RequiredAuthorization);
-                SetGroupIfExists(urlPatternMatch, UrlPartType.User);
-                SetGroupIfExists(urlPatternMatch, UrlPartType.Password);
-                SetHost(urlPatternMatch);
-                SetGroupIfExists(urlPatternMatch, UrlPartType.Path);
-                SetGroupIfExists(urlPatternMatch, UrlPartType.QueryParams);
-                SetGroupIfExists(urlPatternMatch, UrlPartType.Fragment);
-            }
+			if (urlPatternMatch.Success)
+			{
+				SetGroupIfExists(UrlPartType.Scheme);
+				SetGroupIfExists(UrlPartType.RequiredAuthorization);
+				SetGroupIfExists(UrlPartType.UserName);
+				SetGroupIfExists(UrlPartType.UserPassword);
+				SetHostAndPort(urlPatternMatch, partsMap);
+				SetGroupIfExists(UrlPartType.Path);
+				SetGroupIfExists(UrlPartType.QueryParams);
+				SetGroupIfExists(UrlPartType.Fragment);
+			}
 
-            return partsMap;
+			return partsMap;
 
-            void SetGroupIfExists(Match match, UrlPartType type)
-            {
-                var groupValue = GetGroupValue(match, type.ToString("g"));
+			void SetGroupIfExists(UrlPartType type)
+			{
+				this.SetGroupIfExists(urlPatternMatch, type, partsMap);
+			}
+		}
 
-                if (groupValue != null)
-                {
-                    partsMap.Add(type, groupValue);
-                }
-            }
+		private string GetGroupValue(Match match, string name)
+		{
+			var group = match.Groups[name];
+			return group != null && group.Success && !string.IsNullOrEmpty(group.Value)
+				? group.Value.Trim()
+				: null;
+		}
 
-            void SetHost(Match match)
-            {
-                var groupValue = GetGroupValue(match, "HostIpPort");
+		private void SetGroupIfExists(Match match, UrlPartType type, Dictionary<UrlPartType, string> partsMap)
+		{
+			var groupValue = GetGroupValue(match, type.ToString("g"));
 
-                if (groupValue == null)
-                {
-                    return;
-                }
+			if (groupValue != null)
+			{
+				partsMap.Add(type, groupValue);
+			}
+		}
 
-                var colonGroup = groupValue.Split(':');
+		private void SetHostAndPort(Match match, Dictionary<UrlPartType, string> partsMap)
+		{
+			var groupValue = GetGroupValue(match, "HostIpPort");
 
-                if (colonGroup.Length == 1)
-                {
-                    partsMap.Add(UrlPartType.Host, groupValue);
-                }
-                else if (colonGroup.Length == 2)
-                {
-                    partsMap.Add(UrlPartType.Host, colonGroup[0]);
-                    partsMap.Add(UrlPartType.Port, colonGroup[1]);
-                }
-                else
-                {
-                    var ipV6PortMatch = IpV6PortRegex.Match(groupValue);
+			if (groupValue == null)
+			{
+				return;
+			}
 
-                    if (ipV6PortMatch.Success)
-                    {
-                        SetGroupIfExists(ipV6PortMatch, UrlPartType.Host);
-                        SetGroupIfExists(ipV6PortMatch, UrlPartType.Port);
-                    }
-                    else
-                    {
-                        partsMap.Add(UrlPartType.Host, groupValue);
-                    }
-                }
-            }
-        }
+			var ipV6PortMatch = IpV6PortRegex.Match(groupValue);
 
-        private string GetGroupValue(Match match, string name)
-        {
-            var group = match.Groups[name];
-            return group != null && group.Success && !string.IsNullOrEmpty(group.Value)
-                ? group.Value.Trim()
-                : null;
-        }
-    }
+			if (ipV6PortMatch.Success)
+			{
+				SetGroupIfExists(ipV6PortMatch, UrlPartType.Host, partsMap);
+				SetGroupIfExists(ipV6PortMatch, UrlPartType.Port, partsMap);
+			}
+			else
+			{
+				var colonGroup = groupValue.Split(':');
+
+				if (colonGroup.Length == 1)
+				{
+					partsMap.Add(UrlPartType.Host, groupValue);
+				}
+				else if (colonGroup.Length == 2)
+				{
+					partsMap.Add(UrlPartType.Host, colonGroup[0]);
+
+					var port = colonGroup[1];
+
+					if (!string.IsNullOrEmpty(port))
+					{
+						partsMap.Add(UrlPartType.Port, port);
+					}
+				}
+				else
+				{
+					throw new InvalidPatternException("\"Host pattern\" is invalid. If you wanted to specify the ipv6 format, then use square brackets");
+				}
+			}
+		}
+	}
 }

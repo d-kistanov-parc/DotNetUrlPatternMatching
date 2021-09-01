@@ -1,70 +1,76 @@
-﻿using System;
+using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using UrlPatternMatching.Core.Exceptions;
 
 namespace UrlPatternMatching.Core
 {
-    internal abstract class BaseUrlPatternMatcher
-    {
-        private Regex _compareRegex;
-        private ReplaceRegexBuilder _regexBuilder;
+	internal abstract class BaseUrlPatternMatcher
+	{
+		private Regex _compareRegex;
 
-        protected Context Context { get; private set; }
+		protected Context Context { get; private set; }
 
-        protected string PatternPart { get; private set; }
+		protected string PatternPart { get; private set; }
 
-        public abstract UrlPartType UrlPartType { get; }
+		public abstract UrlPartType UrlPartType { get; }
 
-        protected abstract bool IgnoreCase { get; }
+		protected abstract bool IgnoreCase { get; }
 
-        protected virtual string[] StopCharsForTilda { get; set; } = new string[0];
+		protected virtual string[] StopCharsForTilda { get; set; } = new string[0];
 
-        internal BaseUrlPatternMatcher(ReplaceRegexBuilder regexBuilder)
-        {
-            _regexBuilder = regexBuilder;
-        }
+		public void Init(Context context)
+		{
+			Context = context;
 
-        public void Init(Context context)
-        {
-            Context = context;
+			if (context.PatternParts.TryGetValue(UrlPartType, out string patternPart))
+			{				
+				PatternPart = PreparePatternPart(patternPart);
 
-            if (context.PatternParts.TryGetValue(UrlPartType, out string patternPart))
-            {
-                PatternPart = patternPart;
+				if (string.IsNullOrEmpty(PatternPart))
+				{
+					return;
+				}
 
-                _compareRegex = _regexBuilder.ConvertPatternToRegex(PatternPart,
-                    IgnoreCase,
-                    stopCharsForTilde: StopCharsForTilda);
+				_compareRegex = context.ReplaceRegexBuilder.ConvertPatternToRegex(PatternPart,
+					IgnoreCase,
+					stopCharsForTilde: StopCharsForTilda);
 
-                Validate();
-            }
-        }
+				Validate();
+			}
+		}
 
-        public virtual bool IsMatch(Uri url)
-        {
-            if (PatternPart == null)
-            {
-                return true;
-            }
+		public virtual bool IsMatch(Uri url)
+		{
+			if (string.IsNullOrEmpty(PatternPart))
+			{
+				return true;
+			}
 
-            var value = GetValueForMatch(url);
+			var value = GetValueForMatch(url);
 
-            return _compareRegex.IsMatch(value);
-        }
+			var values = EncodeHelper.GetSearchValues(value);
 
+			return values.Any(val => _compareRegex.IsMatch(val));
+		}
 
-        internal abstract string GetValueForMatch(Uri url);
+		internal abstract string GetValueForMatch(Uri url);
 
-        internal virtual void Validate()         
-        { 
-        }
+		internal virtual string PreparePatternPart(string value)
+		{
+			return value;
+		}
 
-        internal void ShouldNotContainTilde()
-        {
-            if (PatternPart.Contains(Consts.Tilde))
-            {
-                throw new InvalidPattern($"{UrlPartType} cannot contain \"{Consts.Tilde}\", use \"{Consts.Asterisk}\"");
-            }
-        }
-    }
+		internal virtual void Validate()
+		{
+		}
+
+		internal void ShouldNotContainTilde()
+		{
+			if (PatternPart.Contains(Consts.Tilde))
+			{
+				throw new InvalidPatternException($"\"{UrlPartType} pattern\" cannot contain \"{Consts.Tilde}\", use \"{Consts.Asterisk}\"");
+			}
+		}
+	}
 }

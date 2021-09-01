@@ -1,15 +1,15 @@
-﻿namespace UrlPatternMatching.Core
+namespace UrlPatternMatching.Core
 {
-    internal enum UrlPartType
-    {
-        Scheme,
-        RequiredAuthorization,
-        User,
-        Password,
-        Host,
-        Port,
-        Path,
-        QueryParams,
-        Fragment
-    }
+	internal enum UrlPartType
+	{
+		Scheme,
+		RequiredAuthorization,
+		UserName,
+		UserPassword,
+		Host,
+		Port,
+		Path,
+		QueryParams,
+		Fragment
+	}
 }
