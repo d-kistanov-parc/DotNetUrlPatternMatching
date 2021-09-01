@@ -5,12 +5,10 @@
     <LangVersion>8.0</LangVersion>
     <Authors>Dmitriy Kistanov</Authors>
 	<EmbedUntrackedSources>true</EmbedUntrackedSources>
-	<Version>1.0.0.1</Version>
+	<Version>1.1.2.1</Version>
 	<PackageProjectUrl>https://github.com/d-kistanov-parc/DotNetUrlPatternMatching</PackageProjectUrl>
 	<RepositoryUrl>https://github.com/d-kistanov-parc/DotNetUrlPatternMatching</RepositoryUrl>
 	<PackageTags>url pattern matching comapre pattern-matching url-pattern-matching</PackageTags>
-	<AssemblyVersion>1.1.2.1</AssemblyVersion>
-	<FileVersion>1.1.2.1</FileVersion>
 	<Description>The library allows you to match a URL to a pattern.
 How it works - we break the url pattern into parts And we match each non-empty part with a similar one from the URL.
 
