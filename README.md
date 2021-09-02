@@ -7,7 +7,7 @@ How it works
 - each non-empty part is matched with a similar one from the URL.
 
 You can specify a Wildcard `*` or `~`  
-Where `*` is any character set within the group (schema, host, port, path, parameter, anchor)  
+Where `*` is any character set within the group (scheme, host, port, path, parameter, fragment)  
 Where `~` any character set within a group segment (host, path)
 
 Only supply parts of the URL you care about. Parts which are left out will match anything. E.g. if you don’t care about the host, then leave it out.
@@ -22,7 +22,7 @@ Only supply parts of the URL you care about. Parts which are left out will match
     - [Port](#port)
     - [Path](#path)
     - [Query](#query)
-    - [Fragment](#fragments)
+    - [Fragment](#fragment)
     - [Basic Authentication](#basic-authentication)
 - [Behavior](#behavior)
 	- [Сombining](#сombining)
@@ -135,7 +135,7 @@ Pattern | Matched | Not matched
 ```?cc=33&a*=11``` | `http://github.com?abs=11&bb=22&cc=33` | `http://github.com?cc=33&bba=11`
 ```http://github.com??text=%D0*``` | `http://github.com??text=%D0%BC%D0%BE%D0%BB` | `http://github.com??text=%BC%D0`
 
-## Fragments
+## Fragment
 Pattern | Matched | Not matched
 --- |--- | ---
 ```http://github.com#main*``` | `http://github.com#maintable` | `https://github.com#table`
@@ -153,7 +153,7 @@ Pattern | Matched | Not matched
 ```https://mail*:@github.com``` | `https://mail1:pass@github.com` | `https://other:mail@github.com`
 
 ## Behavior
-Schema and host are always case insensitive. 
+Scheme and host are always case insensitive. 
 
 ## Сombining
 You can combine different parts in the template and specify several wildcards
