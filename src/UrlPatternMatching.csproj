@@ -12,14 +12,14 @@
     <RepositoryUrl>https://github.com/d-kistanov-parc/DotNetUrlPatternMatching</RepositoryUrl>
     <PackageTags>url pattern matching matcher match compare pattern-matching url-pattern-matching url-matching url-match .net core dotnet</PackageTags>
     <Description>
-      The library allows you to match a URL to a pattern.
-      How it works - we break the url pattern into parts And we match each non-empty part with a similar one from the URL.
+The library allows you to match a URL to a pattern.
+How it works - we break the url pattern into parts And we match each non-empty part with a similar one from the URL.
 
-      You can specify Wildcard: * or ~
-      Where * is any character set within the group (schema, host, port, path, parameter, anchor)
-      Where ~ any character set within a group segment (host, path)
+You can specify Wildcard: * or ~
+Where * is any character set within the group (schema, host, port, path, parameter, anchor)
+Where ~ any character set within a group segment (host, path)
 
-      Only supply parts of the URL you care about. Parts left out will match anything. E.g. if you don’t care about the host, then leave it out.
+Only supply parts of the URL you care about. Parts left out will match anything. E.g. if you don’t care about the host, then leave it out.
     </Description>
     <Copyright>Copyright (c) 2021, Dmitriy Kistanov</Copyright>
     <PackageReleaseNotes>See https://github.com/d-kistanov-parc/DotNetUrlPatternMatching/blob/master/ReleaseNotes.md</PackageReleaseNotes>
