@@ -2,14 +2,15 @@
 
 The library allows you to match a URL to a pattern.
 
-How it works - we break the url pattern into parts  
-And we match each non-empty part with a similar one from the URL.
+How it works 
+- an url pattern is split into parts  
+- each non-empty part is matched with a similar one from the URL.
 
-You can specify Wildcard: `*` or `~`  
+You can specify a Wildcard `*` or `~`  
 Where `*` is any character set within the group (schema, host, port, path, parameter, anchor)  
 Where `~` any character set within a group segment (host, path)
 
-Only supply parts of the URL you care about. Parts left out will match anything. E.g. if you don’t care about the host, then leave it out.
+Only supply parts of the URL you care about. Parts which are left out will match anything. E.g. if you don’t care about the host, then leave it out.
 
 
 - [Quick Start](#quick-start)
@@ -32,8 +33,8 @@ Only supply parts of the URL you care about. Parts left out will match anything.
 ## Quick Start
 [![NuGet](https://img.shields.io/nuget/v/UrlPatternMatching.svg)](https://www.nuget.org/packages/UrlPatternMatching/)
 
-* support all .NETStandard versions
-* without dependencies
+* supports all .NETStandard versions
+* no dependencies
 
 ## Installation
 ```
@@ -53,7 +54,7 @@ bool isMatch = "https://github.com/DotNetUrlPatternMatching/edit/develop/README.
 
 // Should be - true
 ```
-The highest performance will be achieved if you create an object UrlPatternMatcher for comparison.
+To achieve better performance, you can create an UrlPatternMatcher object and reuse it for multiple matches.
 
 ```cs
 using UrlPatternMatching;
@@ -63,7 +64,7 @@ bool isMatch = matcher.IsMatch(new Uri("https://github.com/org/DotNetUrlPatternM
 
 // Should be - true
 ```
-To improve performance, you can use the `UrlPatternMatcher` caching
+These objects are thread-safe and stateless, so you can create a global cache with them and reuse from different places.
 
 ## URL parts
 ```
@@ -73,7 +74,7 @@ https://user:password@sub.domin.com:80/info/main/base?withParam=one#navigate
 scheme    base-auth        host     port   path         query      fragment
 ```
 
-All parts are optional. And if a part is not specified, then url can contain any value of a similar part.
+All parts are optional. If a part is not specified, then an url can contain any value of a similar part.
 
 ## Scheme
 
@@ -121,7 +122,10 @@ Pattern | Matched | Not matched
 
 ## Query
 
-To match parameters in the template, the parameter (or part of it), the `=` sign, as well as the value (or part of it) must be specified
+To match parameters in the template, you have to specify all of:
+* a parameter (or part of it)
+* the `=` sign
+* a value (or part of it)
 
 For case sensitive comparison, you can set the parameters: `IsCaseSensitiveParamNames` or `IsCaseSensitiveParamValues` in config
 
@@ -140,7 +144,7 @@ Pattern | Matched | Not matched
 ```#main``` | `http://github.com#main` | `https://main.com`
 
 ## Basic Authentication
-We can check basic authentication in url (support not all browsers)
+You can also check basic authentication, sent via URL (not all browsers are supported)
 
 Pattern | Matched | Not matched
 --- |--- | ---
@@ -156,14 +160,14 @@ You can combine different parts in the template and specify several wildcards
 
 Example: `*nuget*/~/~/?top=*` should be matched with `https://www.nuget.org/packages/UrlPatternMatching?top=100`
 
-Also you can skip any parts and specify, for example, in the pattern only the scheme and the fragment
+Also, you can skip any part and specify, for example, only a scheme and a fragment
 
 Example: `https://#page`
 
-## Escaping
-Matching can be given escaped characters (`UrlDecode` \ `UrlEncode`)
+## URL encoding/decoding
+You can perform matching using URL encoded or URL decoded characters. 
 
-Pattern | will matched
+Pattern | will match
 --- |---
 ```#молоко``` | `https://github.com#%D0%BC%D0%BE%D0%BB%D0%BE%D0%BA%D0%BE`
 ```github.com#молоко``` | `https://github.com#молоко`
@@ -171,9 +175,10 @@ Pattern | will matched
 ```#%D0*``` | `https://github.com#D0%BC%D0%BE%D0%BB%D0%BE%D0%BA%D0%BE`
 
 ## Config
-For gloabal settings use `Config.Default`, or create a `new Config()`.
+For global settings use `Config.Default`. For local settings create a `new Config()`.
+If a config is not specified, then the default config will be applied.
 
-Config contains case sensitivity settings for most parts. For others will be ignore case sensitive.
+Config class contains case sensitivity settings for most parts (by default, match is case sensitive).
 ```cs
 public class Config
 {
@@ -184,6 +189,13 @@ public class Config
 	public bool IsCaseSensitiveUserAndPassword { get; set; } = true;
 }
 ```
+
+Example:
+
+```cs
+Config.Default.IsCaseSensitiveParamValues = true; 
+```
+
 Example:
 
 ```cs
@@ -191,17 +203,9 @@ var config = new Config { IsCaseSensitivePathMatch = true };
 var matcher = new UrlPatternMatcher("/atlassian.net/jira/your-work/", config);
 bool result = matcher.IsMatch("https://any.atlassian.net/jira/Your-Work");
 ```
-If the config is not specified, then the default config will be applied, it does not need to be explicitly changed in the parameters.
 
+A config can be passed as a parameter for `UrlExtensions.IsMatch`
 Example:
-
-```cs
-Config.Default.IsCaseSensitiveParamValues = true; 
-```
-Default config can be passed as parameters for `UrlExtensions.IsMatch  `
-
-Example:
-
 ```cs
 var config = new Config();
 bool isMatch = "https://github.com".IsMatch("*.com", config);
