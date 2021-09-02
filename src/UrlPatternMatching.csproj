@@ -10,7 +10,7 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/d-kistanov-parc/DotNetUrlPatternMatching</PackageProjectUrl>
     <RepositoryUrl>https://github.com/d-kistanov-parc/DotNetUrlPatternMatching</RepositoryUrl>
-    <PackageTags>url pattern matching matcher match comapre pattern-matching url-pattern-matching url-matching url-match .net core dotnet</PackageTags>
+    <PackageTags>url pattern matching matcher match compare pattern-matching url-pattern-matching url-matching url-match .net core dotnet</PackageTags>
     <Description>
       The library allows you to match a URL to a pattern.
       How it works - we break the url pattern into parts And we match each non-empty part with a similar one from the URL.
