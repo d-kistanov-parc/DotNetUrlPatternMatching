@@ -26,7 +26,7 @@ Only supply parts of the URL you care about. Parts which are left out will match
     - [Basic Authentication](#basic-authentication)
 - [Behavior](#behavior)
 	- [Сombining](#сombining)
-	- [Escaping](#escaping)
+	- [URL encoding \ decoding](#url-encoding-\-decoding)
 	- [Config](#config)
 	- [Exceptions](#exceptions)
 
@@ -164,7 +164,7 @@ Also, you can skip any part and specify, for example, only a scheme and a fragme
 
 Example: `https://#page`
 
-## URL encoding/decoding
+## URL encoding \ decoding
 You can perform matching using URL encoded or URL decoded characters. 
 
 Pattern | will match
