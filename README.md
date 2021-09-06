@@ -133,7 +133,7 @@ Pattern | Matched | Not matched
 --- |--- | ---
 ```?cc=33&aa=1*``` | `http://github.com?aa=11&bb=22&cc=33` | `http://github.com`
 ```?cc=33&a*=11``` | `http://github.com?abs=11&bb=22&cc=33` | `http://github.com?cc=33&bba=11`
-```http://github.com??text=%D0*``` | `http://github.com??text=%D0%BC%D0%BE%D0%BB` | `http://github.com??text=%BC%D0`
+```http://github.com?text=%D0*``` | `http://github.com?text=%D0%BC%D0%BE%D0%BB` | `http://github.com?text=%BC%D0`
 
 ## Fragment
 Pattern | Matched | Not matched
