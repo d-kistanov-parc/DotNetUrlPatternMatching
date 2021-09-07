@@ -86,11 +86,11 @@ namespace UrlPatternMatching.Core
 					throw new InvalidPatternException($"\"Query pattern\" parameter name or value cannot contain \"{Consts.Tilde}\", use \"{Consts.Asterisk}\"");
 				}
 
-				_comapreNameRegex = context.ReplaceRegexBuilder.ConvertPatternToRegex(param.Name,
+				_comapreNameRegex = context.ReplaceRegexFactory.Create(param.Name,
 					!context.Config.IsCaseSensitiveParamNames,
 					StopChars);
 
-				_comapreValueRegex = context.ReplaceRegexBuilder.ConvertPatternToRegex(param.Value,
+				_comapreValueRegex = context.ReplaceRegexFactory.Create(param.Value,
 					!context.Config.IsCaseSensitiveParamValues,
 					StopChars);
 			}

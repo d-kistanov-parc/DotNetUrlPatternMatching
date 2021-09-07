@@ -30,10 +30,10 @@ namespace UrlPatternMatching
 			config ??= Config.Default;
 
 			IPatternPartsParser parser = new PatternPartsParser();
-			IReplaceRegexBuilder replaceRegexBuilder = new ReplaceRegexBuilder();
+			IReplaceRegexFactory replaceRegexFactory = new ReplaceRegexFactory();
 			IUrlPatternMatcherFactory urlPatternMatcherFactory = new UrlPatternMatcherFactory();
 
-			var context = new Context(pattern, parser, replaceRegexBuilder, config);
+			var context = new Context(pattern, parser, replaceRegexFactory, config);
 
 			_matchers = urlPatternMatcherFactory.Create(context.PatternParts.Keys.ToArray());
 
