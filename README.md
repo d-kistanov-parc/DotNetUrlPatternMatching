@@ -7,7 +7,7 @@ How it works
 - each non-empty part is matched with a similar one from the URL.
 
 You can specify a Wildcard `*` or `~`  
-Where `*` is any character set within the group (scheme, host, port, path, parameter, fragment)  
+Where `*` is any character set within the group (scheme, host, port, path, query, fragment)  
 Where `~` any character set within a group segment (host, path)
 
 Only supply parts of the URL you care about. Parts which are left out will match anything. E.g. if you don’t care about the host, then leave it out.
@@ -68,10 +68,10 @@ These objects are thread-safe and stateless, so you can create a global cache wi
 
 ## URL parts
 ```
-https://user:password@sub.domin.com:80/info/main/base?withParam=one#navigate
-\___/   \___________/\_____________/\_/\____________/\____________/ \______/
-  |           |             |        |      |             |           |
-scheme    base-auth        host     port   path         query      fragment
+https://user:password@sub.domin.com:8081/info/main/base?withParam=one#navigate
+\___/   \___________/\_____________/\__/\______________/\___________/ \______/
+  |           |             |        |         |              |           |
+scheme    base-auth        host     port      path          query      fragment
 ```
 
 All parts are optional. If a part is not specified, then an url can contain any value of a similar part.
@@ -80,9 +80,9 @@ All parts are optional. If a part is not specified, then an url can contain any 
 
 Pattern | Matched | Not matched
 --- |--- | ---
+```http://``` | `https://github.com/` | `ftp://github.com/`
 ```https://github.com/``` | `https://github.com/` | `http://github.com/`
 ```http*://github.com/``` | `https://github.com/` | `ftp://github.com/`
-```http://``` | `https://github.com/` | `ftp://github.com/`
 
 ## Host
 `~` any character in domain level  
@@ -133,7 +133,7 @@ Pattern | Matched | Not matched
 --- |--- | ---
 ```?cc=33&aa=1*``` | `http://github.com?aa=11&bb=22&cc=33` | `http://github.com`
 ```?cc=33&a*=11``` | `http://github.com?abs=11&bb=22&cc=33` | `http://github.com?cc=33&bba=11`
-```http://github.com??text=%D0*``` | `http://github.com??text=%D0%BC%D0%BE%D0%BB` | `http://github.com??text=%BC%D0`
+```http://github.com?text=%D0*``` | `http://github.com?text=%D0%BC%D0%BE%D0%BB` | `http://github.com?text=%BC%D0`
 
 ## Fragment
 Pattern | Matched | Not matched

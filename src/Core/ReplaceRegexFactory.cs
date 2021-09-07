@@ -1,10 +1,11 @@
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace UrlPatternMatching.Core
 {
-	internal class ReplaceRegexBuilder : IReplaceRegexBuilder
+	internal class ReplaceRegexFactory : IReplaceRegexFactory
 	{
-		public Regex ConvertPatternToRegex(string pattern,
+		public Regex Create(string pattern,
 			bool ignoreCase = true,
 			string[] stopCharsForTilde = null)
 		{
@@ -21,11 +22,11 @@ namespace UrlPatternMatching.Core
 			return new Regex($"^{regexPattern}$", options);
 		}
 
-		private string GetPattern(string[] stopCharsForTilda)
+		private static string GetPattern(string[] stopCharsForTilda)
 		{
-			return stopCharsForTilda.Length == 0
-				? ".*"
-				: $"[^{string.Join(string.Empty, stopCharsForTilda)}]*";
+			return stopCharsForTilda.Any()
+				? $"[^{string.Join(string.Empty, stopCharsForTilda)}]*"
+				: ".*";
 		}
 	}
 }

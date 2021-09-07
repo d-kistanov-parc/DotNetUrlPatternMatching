@@ -32,7 +32,7 @@ namespace UrlPatternMatching.Core
 					return;
 				}
 
-				_compareRegex = context.ReplaceRegexBuilder.ConvertPatternToRegex(PatternPart,
+				_compareRegex = context.ReplaceRegexFactory.Create(PatternPart,
 					IgnoreCase,
 					stopCharsForTilde: StopCharsForTilda);
 

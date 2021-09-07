@@ -10,16 +10,16 @@ namespace UrlPatternMatching.Core
 
 		internal Dictionary<UrlPartType, string> PatternParts { get; }
 
-		internal IReplaceRegexBuilder ReplaceRegexBuilder { get; }
+		internal IReplaceRegexFactory ReplaceRegexFactory { get; }
 
 		internal Context(string pattern,
 			IPatternPartsParser parser,
-			IReplaceRegexBuilder replaceRegexBuilder,
+			IReplaceRegexFactory factory,
 			Config config)
 		{
 			Pattern = pattern;
 			Config = config;
-			ReplaceRegexBuilder = replaceRegexBuilder;
+			ReplaceRegexFactory = factory;
 			PatternParts = parser.Parse(Pattern);
 		}
 	}

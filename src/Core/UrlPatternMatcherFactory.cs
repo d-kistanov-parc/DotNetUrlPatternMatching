@@ -6,6 +6,8 @@ namespace UrlPatternMatching.Core
 {
 	internal class UrlPatternMatcherFactory : IUrlPatternMatcherFactory
 	{
+		// reflection - slow
+		// DI - dependencies that are not needed
 		private static readonly Dictionary<UrlPartType, Func<IUrlPatternMatcher>> Map =
 			new Dictionary<UrlPartType, Func<IUrlPatternMatcher>>
 			{
