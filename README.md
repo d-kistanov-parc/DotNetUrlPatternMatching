@@ -80,7 +80,7 @@ All parts are optional. If a part is not specified, then an url can contain any 
 
 Pattern | Matched | Not matched
 --- |--- | ---
-```http://``` | `https://github.com/` | `ftp://github.com/`
+```http://``` | `http://github.com/` | `ftp://github.com/`
 ```https://github.com/``` | `https://github.com/` | `http://github.com/`
 ```http*://github.com/``` | `https://github.com/` | `ftp://github.com/`
 
